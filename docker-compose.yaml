@@ -1,0 +1,20 @@
+version: '3.8'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+    volumes:
+    - .:/workspace
+    command: sleep infinity
+    depends_on:
+    - fogis-api-client
+    - mock-server
+    environment:
+    - PYTHONUNBUFFERED=1
+    tty: true
+  fogis-api-client:
+    image: ghcr.io/pitchconnect/fogis-api-client-python:latest
+    restart: unless-stopped
+    ports:
+    - 8081:8081

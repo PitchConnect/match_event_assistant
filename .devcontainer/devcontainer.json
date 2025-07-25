@@ -1,0 +1,19 @@
+{
+    "name": "Python 3.11 DevContainer",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": ".."
+    },
+    "workspaceFolder": "/workspace",
+    "settings": {
+        "python.pythonPath": "/usr/local/bin/python"
+    },
+    "postCreateCommand": "pre-commit install || true",
+    "extensions": [
+        "ms-python.python",
+        "ms-azuretools.vscode-docker",
+        "ms-vscode-remote.remote-containers"
+    ],
+    "forwardPorts": [],
+    "remoteUser": "vscode"
+}

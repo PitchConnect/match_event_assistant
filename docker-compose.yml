@@ -1,0 +1,21 @@
+
+version: '3.8'
+services:
+  app:
+    build: .
+    container_name: match_event_assistant_app
+    volumes:
+      - ./data:/app/data
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    # Uncomment and configure if you add more services (e.g., mock server)
+    # depends_on:
+    #   - mockserver
+
+#  mockserver:
+#    image: mockserver/mockserver:latest
+#    ports:
+#      - "1080:1080"
