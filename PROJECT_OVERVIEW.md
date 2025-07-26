@@ -65,10 +65,22 @@ match_event_assistant/
 - MkDocs for building browsable documentation from `/docs` and codebase.
 - Badges in README for CI, coverage, Python version, etc.
 
-### Next Steps
-- Review and refine module interfaces and API contracts.
+
 - Begin implementation of core modules and tests.
 - Expand documentation and onboarding as features are added.
+
+### Next Steps & Roadmap
+
+The following planning and project management tasks have been created as actionable GitHub issues. Please refer to each for detailed steps, goals, and references.
+
+- [Module Implementation Roadmaps: Event Logging, Match State, API Integration, Analytics](https://github.com/PitchConnect/match_event_assistant/issues/3)
+- [Test Coverage and Quality Assurance Strategy](https://github.com/PitchConnect/match_event_assistant/issues/4)
+- [CI/CD Pipeline and Automation Planning](https://github.com/PitchConnect/match_event_assistant/issues/5)
+- [Documentation Automation and Standards Enforcement](https://github.com/PitchConnect/match_event_assistant/issues/6)
+- [Milestone and Development Roadmap Planning](https://github.com/PitchConnect/match_event_assistant/issues/7)
+
+_Last updated: 2025-07-26 07:49:25_
+
 
 ---
 
