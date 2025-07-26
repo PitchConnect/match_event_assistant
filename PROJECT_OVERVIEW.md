@@ -88,3 +88,6 @@ _Last updated: 2025-07-26 07:49:25_
 
 ---
 _Last reviewed and updated by Agent Zero on 2025-07-26 07:46:20_
+
+
+See also: docs/VOICE_NLP_AND_CONTEXT.md for details on the voice/NLP pipeline and agentic context propagation standards.
