@@ -1,26 +1,75 @@
-# Project Overview: Match Event Assistant DevContainer Setup
+# PROJECT_OVERVIEW.md (Reconstructed Draft)
 
-## Architecture
-- **DevContainer**: Python 3.11, pre-commit, pytest, black, flake8, mypy, project dependencies from requirements.txt
-- **fogis-api-client**: Runs as a separate service (not included in the devcontainer image)
-## DevContainer Details
-- Located in `.devcontainer/` directory
-- Uses a custom Dockerfile based on the official Python 3.11 devcontainer image
-- Installs all required Python tools and project dependencies
-- VS Code extensions are recommended for best experience
+## Project Title: Match Event Assistant
 
-## Onboarding Steps
-1. Clone the repository
-2. Open in VS Code and reopen in container
-3. Use `docker compose up --build` to start all services
-4. Develop and test as usual; code quality tools are pre-installed
+### Purpose & Objectives
+- Build a real-time match event logging and analytics system for referees and analysts.
+- Enable voice-driven, timestamped event capture, match state management, and post-match analysis.
+- Support modular, agentic workflows for automation, extensibility, and collaboration.
 
-## Updating the DevContainer
-- Edit `.devcontainer/Dockerfile` or `devcontainer.json` as needed
-- Update `requirements.txt` for Python dependencies
-- Rebuild the container via VS Code or `docker compose build`
-- Communicate changes to your team
+### Problem Statement
+- Manual event logging is error-prone and distracts from officiating.
+- Existing tools lack real-time, context-aware analytics and integration with physiological data.
+- Need for a robust, extensible system that supports both live and post-match workflows.
 
-## Service Customization
-- Update `docker-compose.yaml` to change service images, ports, or environment variables
-This setup ensures a consistent, high-quality development environment for all contributors.
+### High-Level Architecture
+- **Voice Interface:** Hot word detection, speech-to-text (STT), text-to-speech (TTS).
+- **Event Logging Module:** Structured event capture, timestamping, and local persistence.
+- **Match State Management:** Voice or manual control of match phases (start, stop, pause, resume).
+- **API Integration:** REST client for FOGIS API (match data, rosters, events).
+- **Data Models:** Pydantic-based schemas for events, matches, teams, and players.
+- **Analytics & Reporting:** Timeline generation, physiological data alignment, and export.
+- **Containerization:** Docker, devcontainer, and docker-compose for reproducible environments.
+
+### Directory Structure (Monorepo)
+```
+match_event_assistant/
+├── src/                  # Source code modules
+├── tests/                # Unit and integration tests
+├── docs/                 # High-level guides, API docs, architecture
+├── .devcontainer/        # Dev container config (Dockerfile, devcontainer.json)
+├── .github/              # Issue/PR templates, workflows
+├── data/                 # Persistent data (volumes)
+├── Dockerfile            # Base image for deployment
+├── docker-compose.yaml   # Orchestrates dev, API client, etc.
+├── .env.example          # Template for environment variables
+├── README.md             # Project intro, badges, onboarding
+├── PROJECT_OVERVIEW.md   # This file
+├── CONTRIBUTING.md       # Contribution guidelines
+├── CODE_OF_CONDUCT.md    # Code of conduct
+```
+
+### Key Workflows
+- **Match State Control:** Voice or manual commands to manage match clock and phases.
+- **Event Logging:** Voice-triggered or manual event capture, with second-level precision.
+- **Querying:** Voice or text queries for player info, match stats, or event review.
+- **Data Persistence:** All events and session data stored locally for review/export.
+- **API Integration:** RESTful communication with FOGIS API client (containerized).
+- **Analytics:** Align physiological data (e.g., HR from GPX) with match events for reporting.
+
+### Standards & Best Practices
+- **Module Interfaces:** Use Pydantic models, type hints, and clear function/class contracts.
+- **Naming & Style:** PEP8, descriptive names, robust error handling.
+- **Documentation:** In-code docstrings, Markdown guides, auto-generated API docs (MkDocs).
+- **Contribution:** PRs, code reviews, branching, onboarding checklist, issue/PR templates.
+- **Containerization:** All development in Docker/devcontainer, persistent data via volumes.
+
+### Onboarding & Development
+- Clone repo, open in VS Code (or compatible editor) with devcontainer support.
+- Build and start all services via `docker-compose up`.
+- Install dependencies, run pre-commit hooks, and follow onboarding checklist in README.
+- Use `.env` for secrets and environment variables (never commit real secrets).
+
+### Documentation Strategy
+- All modules and APIs documented with docstrings and Markdown.
+- MkDocs for building browsable documentation from `/docs` and codebase.
+- Badges in README for CI, coverage, Python version, etc.
+
+### Next Steps
+- Review and refine module interfaces and API contracts.
+- Begin implementation of core modules and tests.
+- Expand documentation and onboarding as features are added.
+
+---
+
+**If you want to restore or refine any specific section, or need a more detailed breakdown (e.g., module APIs, onboarding steps, standards), let me know and I’ll expand or adjust as needed.**
