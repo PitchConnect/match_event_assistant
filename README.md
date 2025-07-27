@@ -139,3 +139,17 @@ api = APIIntegration(base_url="http://localhost")
 response = api.get("test")
 print(response)
 ```
+
+## Analytics Module Usage
+
+The `Analytics` class provides basic analytics for match events and state.
+
+Example usage:
+```python
+from match_event_assistant.analytics import Analytics
+
+analytics = Analytics()
+events = [1, 2, 3]
+result = analytics.summarize_events(events)
+print(result)
+```
