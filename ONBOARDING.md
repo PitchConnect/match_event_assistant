@@ -38,3 +38,12 @@ All contributors are required to use the provided devcontainer for development a
 
 > Direct local development outside the devcontainer is not supported and may result in failed tests or inconsistent environments.
 
+
+---
+## Devcontainer Verification
+
+Before submitting a pull request, run the onboarding check script to verify you are inside the devcontainer:
+
+    ./check_devcontainer.py
+
+You must see "PASS: Running inside devcontainer." If you see "FAIL", please follow the devcontainer setup instructions above.

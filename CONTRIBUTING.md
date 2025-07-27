@@ -26,3 +26,12 @@ All code contributions must be developed and tested within the provided devconta
 - Pull requests from outside the devcontainer will not be accepted.
 
 See ONBOARDING.md for setup instructions.
+
+---
+## Devcontainer Verification
+
+All contributors must run the onboarding check script before submitting a pull request:
+
+    ./check_devcontainer.py
+
+Pull requests that fail this check will not be accepted.
