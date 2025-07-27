@@ -57,3 +57,9 @@ This file will be updated as issues are clarified, completed, or reprioritized.
 - Scaffolded analytics.py with Analytics class and AnalyticsResult data model.
 - Minimal test (tests/test_analytics.py) added and passing.
 - Usage documented in README.md.
+
+## [2025-07-27 09:32 UTC] main.py Integration
+- Integrated EventLogger, MatchStateManager, APIIntegration, and Analytics in main.py with CLI entry point.
+- End-to-end test (tests/test_main.py) added and passing.
+- .env file created for environment variables.
+- Usage documented in README.md.

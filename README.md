@@ -153,3 +153,20 @@ events = [1, 2, 3]
 result = analytics.summarize_events(events)
 print(result)
 ```
+
+## Main Integration & CLI Usage
+
+The `main.py` script wires together all core modules and provides a CLI for basic operations.
+
+Example usage:
+```sh
+python -m match_event_assistant.main --log-event goal "Scored by #10"
+python -m match_event_assistant.main --update-score 1 2
+python -m match_event_assistant.main --fetch-api test
+python -m match_event_assistant.main --analytics
+```
+
+Ensure you have a `.env` file with at least:
+```
+API_BASE_URL=http://localhost/api
+```
