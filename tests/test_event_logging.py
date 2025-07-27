@@ -5,6 +5,7 @@ import pytest
 
 event_type_loader = EventTypeLoader()
 
+
 def test_log_valid_event():
     logger = EventLogger(event_type_loader)
     event = MatchEvent(
@@ -21,6 +22,7 @@ def test_log_valid_event():
     assert events[0].event_type == "regular_goal"
     assert events[0].event_type_id == 6
 
+
 def test_log_event_invalid_type():
     logger = EventLogger(event_type_loader)
     event = MatchEvent(
@@ -33,6 +35,7 @@ def test_log_event_invalid_type():
     )
     with pytest.raises(ValueError, match="Invalid event_type"):
         logger.log_event(event)
+
 
 def test_log_event_mismatched_id():
     logger = EventLogger(event_type_loader)

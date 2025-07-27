@@ -1,0 +1,619 @@
+diff --git a/PROJECT_OVERVIEW.md b/PROJECT_OVERVIEW.md
+index df2dc29..2a67ae5 100644
+--- a/PROJECT_OVERVIEW.md
++++ b/PROJECT_OVERVIEW.md
+@@ -165,3 +165,13 @@ Milestone 2 delivered a robust Event Logging Core Module. The team designed a fl
+ - **Mandatory reviewer assignment is not enforced** due to the use of a shared Personal Access Token (PAT) for all agents and the user.
+ - Contributors are still expected to follow the documented workflow: PRs, reviews (where possible), pre-commit and CI checks, and issue/milestone management.
+ - This enforcement will be reviewed if/when individual credentials are introduced.
++
++
++## 🐳 Deployment Architecture & API Client Container (as of 2025-07-27)
++- The fogis API client is designed to run in a parallel container for modularity and scalability.
++- The canonical image URL is specified in `docker-compose.yaml`:
++
++      image: ghcr.io/pitchconnect/fogis-api-client-python:latest
++
++- For all deployment and environment configuration details, always refer to `docker-compose.yaml` as the single source of truth.
++- If the image or configuration changes, update `docker-compose.yaml` and reference it here as needed.
+diff --git a/README.md b/README.md
+index 91c17b1..2bf7f64 100644
+--- a/README.md
++++ b/README.md
+@@ -18,3 +18,106 @@ A real-time match event logging and analytics system for referees and analysts.
+ ---
+
+ For more information, see PROJECT_OVERVIEW.md, CONTRIBUTING.md, and the issue tracker.
++
++## Minimal CLI Test Interface
++
++A minimal, interactive text-based CLI is provided for manual scenario testing of the match_event_assistant system before TTS/STT features are added.
++
++### How to Start
++
++```bash
++python cli_test.py
++```
++
++### Available Commands
++
++- `simulate_event <event_description>`: Simulate a match event and see the system's (mocked) response.
++- `help` or `?`: List available commands.
++- `exit` or `Ctrl-D`: Exit the CLI.
++
++### Example Session
++
++```
++$ python cli_test.py
++Welcome to the Match Event Assistant CLI. Type help or ? to list commands.
++(match-event) simulate_event goal by team A
++Simulating event: goal by team A
++System response: [Mocked response for "goal by team A"]
++(match-event) exit
++Exiting Match Event Assistant CLI.
++```
++
++---
++
++The CLI is designed for easy extension and manual scenario testing.
++
++
++## PitchConnect match_event_assistant CLI Usage & Integration
++
++### Setup Instructions
++
++1. **Install dependencies:**
++   ```sh
++   pip install -r requirements.txt
++   ```
++2. **(Optional) Set environment variables:**
++   - `FOGIS_API_KEY`: Your API key for the fogis API
++   - `FOGIS_API_BASE_URL`: Base URL for the fogis API (if not default)
++
++3. **Run the CLI:**
++   ```sh
++   python cli.py <command> [options]
++   ```
++
++### Available Commands
++
++- `get-match <match_id>`: Fetch match metadata
++- `get-events <match_id>`: Fetch event timeline
++- `get-roster <match_id>`: Fetch team rosters
++- `get-officials <match_id>`: Fetch match officials
++
++### Global Options
++
++- `--output [json|table|yaml]`   Output format (default: json)
++- `--api-key <key>`              API key (overrides env var)
++- `--base-url <url>`             API base URL (overrides env var)
++- `--timeout <seconds>`          API timeout in seconds (default: 10)
++- `--debug`                      Show debug info on error
++
++### Command Examples
++
++```sh
++python cli.py get-match 12345 --output table
++python cli.py get-events 12345 --api-key $FOGIS_API_KEY
++python cli.py get-roster 12345 --output yaml
++python cli.py get-officials 12345 --timeout 5
++```
++
++### Error Handling
++
++- **API/network errors:**
++  - User-friendly error message is printed to stderr
++  - CLI exits with code 2
++- **Invalid arguments:**
++  - Usage/help is printed, CLI exits with code 1
++- **Debug mode:**
++  - Use `--debug` to print stack traces for troubleshooting
++
++### Extension Points
++
++- **Add new commands:**
++  - Define a new subcommand in `cli.py` and implement the corresponding method in `communication/api_client.py`
++- **Add new output formats:**
++  - Extend the `print_output` function in `cli.py`
++- **API integration:**
++  - Update or extend `APIClient` for new endpoints or authentication methods
++
++### Integration Notes
++
++- The CLI is designed for both end users and developers.
++- Can be scripted or integrated into larger workflows.
++- All commands and options are documented via `--help`.
++
++---
++
++For more details, see the top of this README or consult module-level documentation.
+diff --git a/cli.py b/cli.py
+new file mode 100644
+index 0000000..828bb8a
+--- /dev/null
++++ b/cli.py
+@@ -0,0 +1,119 @@
++#!/usr/bin/env python3
++"""PitchConnect CLI for fogis API client"""
++import sys
++import argparse
++import os
++import json
++from communication.api_client import APIClient
++
++
++def print_output(data, fmt):
++    if fmt == "json":
++        print(json.dumps(data, indent=2, ensure_ascii=False))
++    elif fmt == "yaml":
++        try:
++            import yaml
++
++            print(yaml.dump(data, allow_unicode=True))
++        except ImportError:
++            print("YAML output requires PyYAML. Falling back to JSON.")
++            print(json.dumps(data, indent=2, ensure_ascii=False))
++    elif fmt == "table":
++        if isinstance(data, dict) and "data" in data and isinstance(data["data"], list):
++            rows = data["data"]
++        elif isinstance(data, list):
++            rows = data
++        else:
++            rows = [data]
++        if rows and isinstance(rows[0], dict):
++            headers = rows[0].keys()
++            print("	".join(headers))
++            for row in rows:
++                print("	".join(str(row.get(h, "")) for h in headers))
++        else:
++            print(rows)
++    else:
++        print(data)
++
++
++def main():
++    parent_parser = argparse.ArgumentParser(add_help=False)
++    parent_parser.add_argument(
++        "--output",
++        choices=["json", "table", "yaml"],
++        default="json",
++        help="Output format",
++    )
++    parent_parser.add_argument(
++        "--api-key", type=str, default=None, help="API key (overrides env)"
++    )
++    parent_parser.add_argument(
++        "--base-url", type=str, default=None, help="API base URL (overrides env)"
++    )
++    parent_parser.add_argument(
++        "--timeout", type=int, default=10, help="API timeout (seconds)"
++    )
++    parent_parser.add_argument(
++        "--debug", action="store_true", help="Show debug info on error"
++    )
++
++    parser = argparse.ArgumentParser(
++        description="PitchConnect match_event_assistant CLI"
++    )
++    subparsers = parser.add_subparsers(dest="command", required=True)
++
++    # get-match
++    parser_match = subparsers.add_parser(
++        "get-match", parents=[parent_parser], help="Fetch match metadata"
++    )
++    parser_match.add_argument("match_id", type=str, help="Match ID")
++    # get-events
++    parser_events = subparsers.add_parser(
++        "get-events", parents=[parent_parser], help="Fetch event timeline"
++    )
++    parser_events.add_argument("match_id", type=str, help="Match ID")
++    # get-roster
++    parser_roster = subparsers.add_parser(
++        "get-roster", parents=[parent_parser], help="Fetch team rosters"
++    )
++    parser_roster.add_argument("match_id", type=str, help="Match ID")
++    # get-officials
++    parser_officials = subparsers.add_parser(
++        "get-officials", parents=[parent_parser], help="Fetch match officials"
++    )
++    parser_officials.add_argument("match_id", type=str, help="Match ID")
++
++    args = parser.parse_args()
++
++    api_key = args.api_key or os.environ.get("FOGIS_API_KEY")
++    base_url = args.base_url or os.environ.get("FOGIS_API_BASE_URL")
++    timeout = args.timeout
++
++    client = APIClient(api_key=api_key, base_url=base_url, timeout=timeout)
++
++    try:
++        if args.command == "get-match":
++            result = client.get_match(args.match_id)
++        elif args.command == "get-events":
++            result = client.get_events(args.match_id)
++        elif args.command == "get-roster":
++            result = client.get_roster(args.match_id)
++        elif args.command == "get-officials":
++            result = client.get_officials(args.match_id)
++        else:
++            parser.print_help()
++            sys.exit(1)
++        print_output(result, args.output)
++        sys.exit(0)
++    except Exception as e:
++        if hasattr(args, "debug") and args.debug:
++            import traceback
++
++            traceback.print_exc()
++        else:
++            print(json.dumps({"error": str(e)}, ensure_ascii=False), file=sys.stderr)
++        sys.exit(2)
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/cli_test.py b/cli_test.py
+new file mode 100644
+index 0000000..383583d
+--- /dev/null
++++ b/cli_test.py
+@@ -0,0 +1,29 @@
++import cmd
++
++
++class MatchEventAssistantCLI(cmd.Cmd):
++    intro = "Welcome to the Match Event Assistant CLI. Type help or ? to list commands."
++    prompt = "(match-event) "
++
++    def do_simulate_event(self, arg):
++        """Simulate a match event: simulate_event <event_description>"""
++        if arg:
++            print(f"Simulating event: {arg}")
++            # Here, core logic or mock logic would be called
++            print(f'System response: [Mocked response for "{arg}"]')
++        else:
++            print("Please provide an event description.")
++
++    def do_exit(self, arg):
++        """Exit the CLI."""
++        print("Exiting Match Event Assistant CLI.")
++        return True
++
++    def do_EOF(self, arg):
++        """Exit on Ctrl-D."""
++        print("Exiting Match Event Assistant CLI.")
++        return True
++
++
++if __name__ == "__main__":
++    MatchEventAssistantCLI().cmdloop()
+diff --git a/communication/__pycache__/api_client.cpython-312.pyc b/communication/__pycache__/api_client.cpython-312.pyc
+index ed2b99d..5688d8f 100644
+Binary files a/communication/__pycache__/api_client.cpython-312.pyc and b/communication/__pycache__/api_client.cpython-312.pyc differ
+diff --git a/communication/api_client.py b/communication/api_client.py
+index 91f7356..7514077 100644
+--- a/communication/api_client.py
++++ b/communication/api_client.py
+@@ -8,8 +8,44 @@ class APIClient:
+     def __init__(self, *args, **kwargs):
+         logger.info(f"APIClient initialized with args={args}, kwargs={kwargs}")
+
++    def get_match(self, match_id, **kwargs):
++        import os
++
++        if os.environ.get("FOGIS_API_FORCE_ERROR") == "1":
++            raise Exception("Simulated API error (FOGIS_API_FORCE_ERROR)")
++        """Fetch match metadata by match_id"""
++        endpoint = f"/matches/{match_id}"
++        return self.query(endpoint, **kwargs)
++
++    def get_events(self, match_id, **kwargs):
++        import os
++
++        if os.environ.get("FOGIS_API_FORCE_ERROR") == "1":
++            raise Exception("Simulated API error (FOGIS_API_FORCE_ERROR)")
++        """Fetch event timeline for a match"""
++        endpoint = f"/matches/{match_id}/events"
++        return self.query(endpoint, **kwargs)
++
++    def get_roster(self, match_id, **kwargs):
++        import os
++
++        if os.environ.get("FOGIS_API_FORCE_ERROR") == "1":
++            raise Exception("Simulated API error (FOGIS_API_FORCE_ERROR)")
++        """Fetch team rosters for a match"""
++        endpoint = f"/matches/{match_id}/roster"
++        return self.query(endpoint, **kwargs)
++
++    def get_officials(self, match_id, **kwargs):
++        import os
++
++        if os.environ.get("FOGIS_API_FORCE_ERROR") == "1":
++            raise Exception("Simulated API error (FOGIS_API_FORCE_ERROR)")
++        """Fetch match officials"""
++        endpoint = f"/matches/{match_id}/officials"
++        return self.query(endpoint, **kwargs)
++
+     def query(self, endpoint, params=None, **kwargs):
+-        logger.info()
++        logger.info(f"Querying endpoint: {endpoint}, params: {params}")
+         return {
+             "status": "success",
+             "data": {"mock_key": "mock_value"},
+diff --git a/event_types.yaml b/event_types.yaml
+new file mode 100644
+index 0000000..01cfecd
+--- /dev/null
++++ b/event_types.yaml
+@@ -0,0 +1,52 @@
++generated_at: '2025-07-27T19:13:09'
++event_types:
++- name: regular_goal
++  code: 6
++  description: Regular Goal
++- name: header_goal
++  code: 39
++  description: Header Goal
++- name: corner_goal
++  code: 28
++  description: Corner Goal
++- name: free_kick_goal
++  code: 29
++  description: Free Kick Goal
++- name: own_goal
++  code: 15
++  description: Own Goal
++- name: penalty_goal
++  code: 14
++  description: Penalty Goal
++- name: penalty_missing_goal
++  code: 18
++  description: Penalty Missed
++- name: penalty_save
++  code: 19
++  description: Penalty Saved
++- name: penalty_hitting_frame
++  code: 26
++  description: Penalty Hitting the Frame
++- name: yellow_card
++  code: 20
++  description: Yellow Card
++- name: red_card_deny_goal
++  code: 8
++  description: Red Card (Denying Goal Opportunity)
++- name: red_card_other
++  code: 9
++  description: Red Card (Other Reasons)
++- name: substitution
++  code: 17
++  description: Substitution
++- name: period_start
++  code: 31
++  description: Period Start
++- name: period_end
++  code: 32
++  description: Period End
++- name: match_end
++  code: 23
++  description: Match End (Match Slut)
++notes: Codes and names are based on the definitive EVENT_TYPES mapping from the API
++  client. This list is authoritative for persistence and integration.
+diff --git a/main.py b/main.py
+index b884b5c..b80cdda 100644
+--- a/main.py
++++ b/main.py
+@@ -79,3 +79,6 @@ def main():
+
+ if __name__ == "__main__":
+     main()
++
++from match_event_assistant.event_type_loader import EventTypeLoader
++event_type_loader = EventTypeLoader()
+diff --git a/match_event_assistant/event_logging.py b/match_event_assistant/event_logging.py
+index 05ffdf3..7d7de43 100644
+--- a/match_event_assistant/event_logging.py
++++ b/match_event_assistant/event_logging.py
+@@ -1,40 +1,35 @@
+-"""
+-Event Logging core module for match_event_assistant.
+-Provides EventLogger class and event data models.
+-"""
+-
+ from dataclasses import dataclass, asdict
+ from datetime import datetime
+-from typing import List, Optional
++from typing import Optional
+ import logging
+-
++from match_event_assistant.event_type_loader import EventTypeLoader
+
+ @dataclass
+ class MatchEvent:
+-    """Data model for a match event."""
+-
+     timestamp: datetime
+     event_type: str
++    event_type_id: int
+     description: Optional[str] = None
+     player_id: Optional[int] = None
+     team_id: Optional[int] = None
+
++    def validate(self, loader: EventTypeLoader):
++        loader.validate(self.event_type, self.event_type_id)
+
+ class EventLogger:
+-    """
+-    Core event logger for match events.
+-    Stores events in memory and provides logging functionality.
+-    """
+-
+-    def __init__(self):
+-        self.events: List[MatchEvent] = []
++    def __init__(self, loader: EventTypeLoader):
++        self.events = []
+         self.logger = logging.getLogger("EventLogger")
++        self.loader = loader
+
+     def log_event(self, event: MatchEvent) -> None:
+-        """Log a new match event."""
+-        self.events.append(event)
+-        self.logger.info(f"Event logged: {asdict(event)}")
+-
+-    def get_events(self) -> List[MatchEvent]:
+-        """Return all logged events."""
++        try:
++            event.validate(self.loader)
++            self.events.append(event)
++            self.logger.info(f"Event logged: {asdict(event)}")
++        except ValueError as e:
++            self.logger.error(f"Event validation failed: {e}")
++            raise
++
++    def get_events(self):
+         return self.events
+diff --git a/match_event_assistant/event_type_loader.py b/match_event_assistant/event_type_loader.py
+new file mode 100644
+index 0000000..afc721d
+--- /dev/null
++++ b/match_event_assistant/event_type_loader.py
+@@ -0,0 +1,15 @@
++import yaml
++
++class EventTypeLoader:
++    def __init__(self, yaml_path="event_types.yaml"):
++        with open(yaml_path, "r") as f:
++            data = yaml.safe_load(f)
++        self.name_to_code = {et["name"]: et["code"] for et in data["event_types"]}
++        self.code_to_name = {et["code"]: et["name"] for et in data["event_types"]}
++
++    def validate(self, event_type, event_type_id):
++        if event_type not in self.name_to_code:
++            raise ValueError(f"Invalid event_type: {event_type}")
++        if event_type_id != self.name_to_code[event_type]:
++            raise ValueError(f"event_type_id {event_type_id} does not match event_type {event_type}")
++        return True
+diff --git a/tests/__pycache__/test_cli_integration.cpython-312-pytest-8.4.1.pyc b/tests/__pycache__/test_cli_integration.cpython-312-pytest-8.4.1.pyc
+new file mode 100644
+index 0000000..98d482c
+Binary files /dev/null and b/tests/__pycache__/test_cli_integration.cpython-312-pytest-8.4.1.pyc differ
+diff --git a/tests/test_cli_integration.py b/tests/test_cli_integration.py
+new file mode 100644
+index 0000000..24875be
+--- /dev/null
++++ b/tests/test_cli_integration.py
+@@ -0,0 +1,57 @@
++import pytest
++import os
++import subprocess
++import sys
++
++sys.path.insert(0, "/a0/dev/match_event_assistant")
++
++
++def run_cli(args, env=None):
++    cmd = [sys.executable, "/a0/dev/match_event_assistant/cli.py"] + args
++    result = subprocess.run(cmd, capture_output=True, text=True, env=env)
++    return result
++
++
++@pytest.mark.parametrize(
++    "command,match_id",
++    [
++        ("get-match", "12345"),
++        ("get-events", "12345"),
++        ("get-roster", "12345"),
++        ("get-officials", "12345"),
++    ],
++)
++def test_cli_success(command, match_id):
++    result = run_cli([command, match_id, "--output", "json"])
++    assert result.returncode == 0
++    assert "mock_key" in result.stdout or "success" in result.stdout
++
++
++@pytest.mark.parametrize(
++    "command",
++    [
++        "get-match",
++        "get-events",
++        "get-roster",
++        "get-officials",
++    ],
++)
++def test_cli_error_missing_id(command):
++    result = run_cli([command], env=os.environ.copy())
++    assert result.returncode != 0
++    assert "usage:" in result.stderr or "error" in result.stderr or result.stdout
++
++
++def test_cli_invalid_command():
++    result = run_cli(["invalid-cmd"], env=os.environ.copy())
++    assert result.returncode != 0
++    assert "usage:" in result.stderr or "error" in result.stderr or result.stdout
++
++
++# Example of error simulation via env var
++def test_cli_api_error():
++    env = os.environ.copy()
++    env["FOGIS_API_FORCE_ERROR"] = "1"
++    result = run_cli(["get-match", "failid", "--output", "json"], env=env)
++    assert result.returncode == 2
++    assert "Simulated API error" in result.stderr or result.stdout
+diff --git a/tests/test_event_logging.py b/tests/test_event_logging.py
+index b31bfba..993fe5e 100644
+--- a/tests/test_event_logging.py
++++ b/tests/test_event_logging.py
+@@ -1,17 +1,48 @@
+ from match_event_assistant.event_logging import EventLogger, MatchEvent
++from match_event_assistant.event_type_loader import EventTypeLoader
+ from datetime import datetime
++import pytest
+
++event_type_loader = EventTypeLoader()
+
+-def test_log_and_get_events():
+-    logger = EventLogger()
++def test_log_valid_event():
++    logger = EventLogger(event_type_loader)
+     event = MatchEvent(
+         timestamp=datetime.utcnow(),
+-        event_type="goal",
+-        description="Test goal",
++        event_type="regular_goal",
++        event_type_id=6,
++        description="Test regular goal",
+         player_id=10,
+         team_id=1,
+     )
+     logger.log_event(event)
+     events = logger.get_events()
+     assert len(events) == 1
+-    assert events[0].event_type == "goal"
++    assert events[0].event_type == "regular_goal"
++    assert events[0].event_type_id == 6
++
++def test_log_event_invalid_type():
++    logger = EventLogger(event_type_loader)
++    event = MatchEvent(
++        timestamp=datetime.utcnow(),
++        event_type="invalid_type",
++        event_type_id=999,
++        description="Invalid event type",
++        player_id=10,
++        team_id=1,
++    )
++    with pytest.raises(ValueError, match="Invalid event_type"):
++        logger.log_event(event)
++
++def test_log_event_mismatched_id():
++    logger = EventLogger(event_type_loader)
++    event = MatchEvent(
++        timestamp=datetime.utcnow(),
++        event_type="regular_goal",
++        event_type_id=999,
++        description="Mismatched event_type_id",
++        player_id=10,
++        team_id=1,
++    )
++    with pytest.raises(ValueError, match="does not match event_type"):
++        logger.log_event(event)

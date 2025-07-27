@@ -4,6 +4,7 @@ from typing import Optional
 import logging
 from match_event_assistant.event_type_loader import EventTypeLoader
 
+
 @dataclass
 class MatchEvent:
     timestamp: datetime
@@ -15,6 +16,7 @@ class MatchEvent:
 
     def validate(self, loader: EventTypeLoader):
         loader.validate(self.event_type, self.event_type_id)
+
 
 class EventLogger:
     def __init__(self, loader: EventTypeLoader):
