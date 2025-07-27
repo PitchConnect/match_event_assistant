@@ -158,3 +158,10 @@ Milestone 2 delivered a robust Event Logging Core Module. The team designed a fl
 - **Context Propagation:** Strictly enforce context propagation and real-time logging for all development activities.
 
 > _This roadmap is a living document. Review and update milestones, issues, and documentation regularly to ensure alignment with project goals and transparency._
+
+
+## 🚦 Branch Protection Enforcement (as of 2025-07-27)
+- Direct pushes to the `main` branch are now **blocked** by GitHub branch protection rules. All changes must go through Pull Requests (PRs).
+- **Mandatory reviewer assignment is not enforced** due to the use of a shared Personal Access Token (PAT) for all agents and the user.
+- Contributors are still expected to follow the documented workflow: PRs, reviews (where possible), pre-commit and CI checks, and issue/milestone management.
+- This enforcement will be reviewed if/when individual credentials are introduced.
