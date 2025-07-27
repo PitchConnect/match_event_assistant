@@ -3,7 +3,7 @@ API client interface for fetching match, team, and event data from external sour
 """
 
 from typing import List, Optional
-from .models import Match, Team, Player, MatchEvent
+from .models import Match, Team, MatchEvent
 
 
 def fetch_match(match_id: str) -> Optional[Match]:
