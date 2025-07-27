@@ -79,3 +79,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+from match_event_assistant.event_type_loader import EventTypeLoader
+event_type_loader = EventTypeLoader()
