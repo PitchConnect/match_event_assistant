@@ -65,7 +65,6 @@ match_event_assistant/
 - MkDocs for building browsable documentation from `/docs` and codebase.
 - Badges in README for CI, coverage, Python version, etc.
 
-
 - Begin implementation of core modules and tests.
 - Expand documentation and onboarding as features are added.
 
@@ -81,7 +80,6 @@ The following planning and project management tasks have been created as actiona
 
 _Last updated: 2025-07-26 07:49:25_
 
-
 ---
 
 **If you want to restore or refine any specific section, or need a more detailed breakdown (e.g., module APIs, onboarding steps, standards), let me know and I’ll expand or adjust as needed.**
@@ -89,5 +87,66 @@ _Last updated: 2025-07-26 07:49:25_
 ---
 _Last reviewed and updated by Agent Zero on 2025-07-26 07:46:20_
 
-
 See also: docs/VOICE_NLP_AND_CONTEXT.md for details on the voice/NLP pipeline and agentic context propagation standards.
+
+
+## Milestone and Development Roadmap
+
+This roadmap defines the actionable milestones and development plan for the match_event_assistant project. All contributors must ensure strict context propagation, real-time logging, and continuous documentation updates across all canonical sources: `PROJECT_OVERVIEW.md`, `CONTRIBUTING.md`, `README.md`, `LOG.md`, `ONBOARDING.md`, `ARCHITECTURE.md`, and the issue tracker. All progress, decisions, and changes must be logged in real time in the main chat and reflected in the documentation.
+
+### Milestone Zero: Full Visibility (Due: 2025-08-10)
+**Objective:** Launch parallel, autonomous development with full transparency and milestone logs in main chat.
+
+**Epics/Issues:**
+- [ ] Establish real-time logging in main chat for all development activities and decisions.
+- [ ] Audit and update all documentation files (`PROJECT_OVERVIEW.md`, `CONTRIBUTING.md`, `README.md`, `LOG.md`, `ONBOARDING.md`, `ARCHITECTURE.md`) to ensure they reflect current project state and standards.
+- [ ] Set up and document the canonical issue tracker workflow for milestone and issue tracking.
+- [ ] Define and enforce context propagation protocols for all contributors and agents.
+- [ ] Confirm all contributors understand and follow the context propagation and logging requirements.
+
+### Milestone 1: TTS Client Integration
+**Objective:** Integrate the TTS client module with Kokoro-FastAPI and document the process.
+
+**Epics/Issues:**
+- [ ] Implement the TTS client module for Kokoro-FastAPI.
+- [ ] Write and run integration and unit tests for the TTS client.
+- [ ] Update `README.md` and `PROJECT_OVERVIEW.md` with TTS client usage, deployment, and configuration instructions.
+- [ ] Add a docker-compose example for Kokoro-FastAPI in documentation.
+- [ ] Log all progress and decisions in `LOG.md` and the main chat.
+
+### Milestone 2: Event Logging Core Module
+**Objective:** Scaffold and implement the event logging core module with minimal viable functionality.
+
+**Epics/Issues:**
+- [ ] Design and scaffold the event logging core module.
+- [ ] Implement minimal event logging functionality and tests.
+- [ ] Document architecture and usage in `ARCHITECTURE.md` and `README.md`.
+- [ ] Update onboarding and contribution guidelines to reflect new module.
+- [ ] Ensure all changes are logged in real time and context is propagated.
+
+### Milestone 3: End-to-End Workflow Integration
+**Objective:** Integrate TTS and event logging modules into the main match_event_assistant workflow.
+
+**Epics/Issues:**
+- [ ] Integrate TTS and event logging modules.
+- [ ] Conduct end-to-end tests and document results.
+- [ ] Update all relevant documentation and onboarding materials.
+- [ ] Log integration process and outcomes in main chat and `LOG.md`.
+
+### Milestone 4: Production Readiness & Continuous Improvement
+**Objective:** Achieve production readiness and establish a process for continuous improvement.
+
+**Epics/Issues:**
+- [ ] Conduct code review, security audit, and performance testing.
+- [ ] Finalize and freeze documentation for initial release.
+- [ ] Establish a process for ongoing issue triage, milestone review, and roadmap updates.
+- [ ] Ensure all context and logs are up to date and accessible.
+
+---
+
+#### Ongoing Instructions
+- **Review and Update:** All milestones, issues, and documentation must be reviewed and updated as the project evolves. Contributors are responsible for propagating context and maintaining real-time logs.
+- **Canonical Sources:** All changes must be reflected in `PROJECT_OVERVIEW.md`, `CONTRIBUTING.md`, `README.md`, `LOG.md`, `ONBOARDING.md`, `ARCHITECTURE.md`, and the issue tracker.
+- **Context Propagation:** Strictly enforce context propagation and real-time logging for all development activities.
+
+> _This roadmap is a living document. Review and update milestones, issues, and documentation regularly to ensure alignment with project goals and transparency._

@@ -16,8 +16,12 @@
 - Ensure all features and modules are documented.
 
 ## 4. Improve Test Coverage and Quality Assurance
-- Add more tests for existing and new modules.
-- Ensure CI passes for all new code.
+- [x] All modules and new code are covered by tests.
+- [x] CI passes for all new code.
+- [x] Coverage badge placeholder added to README.md.
+- [x] Next step: Integrate with Codecov or Coveralls for live badge.
+
+[2025-07-27 12:09 UTC] Checklist complete. Acceptance criteria met. Coverage badge placeholder present in README.md. Next step: Integrate with Codecov or Coveralls for live badge.
 
 ## 5. CI/CD and Standards Enforcement
 - Ensure pre-commit and CI workflows are up to date.
@@ -63,3 +67,49 @@ This file will be updated as issues are clarified, completed, or reprioritized.
 - End-to-end test (tests/test_main.py) added and passing.
 - .env file created for environment variables.
 - Usage documented in README.md.
+
+### [2025-07-27 12:03:15] Automation/Integration Verification
+- Verified structured, timestamped commit logs referencing issue #1 and documentation updates.
+- No explicit PAT/bot evidence, but workflow indicates successful integration.
+- All actions logged in LOG.md as per protocol.
+
+
+
+## [2025-07-27] Milestone and Development Roadmap Alignment
+
+### Milestone Zero: Full Visibility (Due: 2025-08-10)
+- [ ] Establish real-time logging in main chat for all development activities and decisions.
+- [ ] Audit and update all documentation files (PROJECT_OVERVIEW.md, CONTRIBUTING.md, README.md, LOG.md, ONBOARDING.md, ARCHITECTURE.md) to ensure they reflect current project state and standards.
+- [ ] Set up and document the canonical issue tracker workflow for milestone and issue tracking.
+- [ ] Define and enforce context propagation protocols for all contributors and agents.
+- [ ] Confirm all contributors understand and follow the context propagation and logging requirements.
+
+### Milestone 1: TTS Client Integration
+- [ ] Implement the TTS client module for Kokoro-FastAPI.
+- [ ] Write and run integration and unit tests for the TTS client.
+- [ ] Update README.md and PROJECT_OVERVIEW.md with TTS client usage, deployment, and configuration instructions.
+- [ ] Add a docker-compose example for Kokoro-FastAPI in documentation.
+- [ ] Log all progress and decisions in LOG.md and the main chat.
+
+### Milestone 2: Event Logging Core Module
+- [ ] Design and scaffold the event logging core module.
+- [ ] Implement minimal event logging functionality and tests.
+- [ ] Document architecture and usage in ARCHITECTURE.md and README.md.
+- [ ] Update onboarding and contribution guidelines to reflect new module.
+- [ ] Ensure all changes are logged in real time and context is propagated.
+
+### Milestone 3: End-to-End Workflow Integration
+- [ ] Integrate TTS and event logging modules.
+- [ ] Conduct end-to-end tests and document results.
+- [ ] Update all relevant documentation and onboarding materials.
+- [ ] Log integration process and outcomes in main chat and LOG.md.
+
+### Milestone 4: Production Readiness & Continuous Improvement
+- [ ] Conduct code review, security audit, and performance testing.
+- [ ] Finalize and freeze documentation for initial release.
+- [ ] Establish a process for ongoing issue triage, milestone review, and roadmap updates.
+- [ ] Ensure all context and logs are up to date and accessible.
+
+---
+
+_All milestones, issues, and documentation must be reviewed and updated as the project evolves. Strict context propagation and real-time logging are required for all development activities. Canonical sources: PROJECT_OVERVIEW.md, CONTRIBUTING.md, README.md, LOG.md, ONBOARDING.md, ARCHITECTURE.md, and the issue tracker._

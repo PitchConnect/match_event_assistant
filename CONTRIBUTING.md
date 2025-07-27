@@ -42,5 +42,4 @@ Thank you for your interest in contributing! This project values clear communica
 ---
 Thank you for helping make this project better!
 
-
 For onboarding and environment setup, see the Quickstart section in the [README.md](README.md).

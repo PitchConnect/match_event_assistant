@@ -1,172 +1,20 @@
 # Match Event Assistant
 
-Real-time match event logging and analytics assistant for referees and analysts.
+A real-time match event logging and analytics system for referees and analysts.
 
-## Development Environment (VS Code DevContainer)
-**All development MUST be performed inside the devcontainer. Pre-commit hooks and CI checks are enforced for every push and pull request.**
+## Quickstart
+- Clone the repository and open in VS Code (or compatible editor) with devcontainer support.
+- Build and start all services via `docker-compose up`.
+- Install dependencies, run pre-commit hooks, and follow onboarding checklist.
+- See PROJECT_OVERVIEW.md and CONTRIBUTING.md for standards, architecture, and contribution guidelines.
 
-- Pre-commit is installed and activated automatically.
-- All code must pass pre-commit and tests (see .github/workflows/ci.yml).
-- Direct pushes to main are discouraged; use pull requests.
+## Documentation
+- All modules and APIs are documented with docstrings and Markdown.
+- See /docs and PROJECT_OVERVIEW.md for architecture and workflow details.
 
-
-This project uses a [VS Code DevContainer](https://code.visualstudio.com/docs/remote/containers) for a reproducible Python 3.11 development environment with pre-commit, pytest, black, flake8, and mypy.
-
-### Quick Start
-
-1. **Clone the repository**
-2. **Open in VS Code**
-3. **Reopen in Container** (VS Code will prompt you, or use the Command Palette: `Dev Containers: Reopen in Container`)
-4. **Install dependencies** (if not already):
-```sh
-pip install -r requirements.txt
-```
-5. **Run tests**:
-```sh
-pytest
-```
-
-```sh
-docker compose up --build
-```
-
-### Code Quality
-- [pre-commit](https://pre-commit.com/) hooks are installed automatically.
-- Run `black`, `flake8`, and `mypy` manually or via pre-commit.
-
-### Recommended VS Code Extensions
-- Python (ms-python.python)
-- Docker (ms-azuretools.vscode-docker)
-- Dev Containers (ms-vscode-remote.remote-containers)
+## Badges
+- [CI Status](#) [Coverage](#) [Python 3.11+](#)
 
 ---
 
-For more details, see [PROJECT_OVERVIEW.md](./PROJECT_OVERVIEW.md).
-
-
-
-## [2025-07-27] Architecture Update: Kokoro-FastAPI TTS Service Integration
-
-We have integrated [Kokoro-FastAPI](https://github.com/remsky/Kokoro-FastAPI) as our text-to-speech (TTS) service. This service runs as a container alongside our main application and exposes OpenAI-compatible endpoints for generating speech audio from text. Key features:
-- Multi-language support (English, Japanese, Chinese, more coming)
-- Voice mixing, streaming, and real-time playback
-- OpenAI-style API for easy integration
-- Dockerized for CPU/GPU deployment
-
-**Integration details:**
-- The service is defined in our `docker-compose.yaml` as `kokoro-tts` (see below for example).
-- Our application communicates with Kokoro-FastAPI via HTTP requests to `/v1/audio/speech`.
-- A client module will be developed to handle TTS requests and responses.
-
-**Example docker-compose service:**
-```yaml
-  kokoro-tts:
-    image: ghcr.io/remsky/kokoro-fastapi-cpu:latest
-    ports:
-      - "8880:8880"
-    environment:
-      - TZ=Europe/Stockholm
-    restart: unless-stopped
-```
-
-**Next steps:**
-- Implement a TTS client module for seamless integration.
-- Document usage and configuration in onboarding materials.
-- Optionally, expose the Kokoro web UI for local testing at `http://localhost:8880/web`.
-
-## TTS Client Usage
-
-The `TTSClient` module provides integration with the Kokoro-FastAPI TTS service.
-
-Example usage:
-```python
-from match_event_assistant.tts_client import TTSClient
-client = TTSClient()
-audio = client.synthesize("Hello, world!", voice="en", output_path="output.wav")
-```
-
-## TTS Client Usage
-
-The `TTSClient` module provides integration with the Kokoro-FastAPI TTS service.
-
-Example usage:
-```python
-from match_event_assistant.tts_client import TTSClient
-client = TTSClient()
-audio = client.synthesize("Hello, world!", voice="en", output_path="output.wav")
-```
-
-## Event Logging Module Usage
-
-The `EventLogger` class provides in-memory logging of match events.
-
-Example usage:
-```python
-from match_event_assistant.event_logging import EventLogger, MatchEvent
-from datetime import datetime
-
-logger = EventLogger()
-event = MatchEvent(timestamp=datetime.now(), event_type="goal", description="Scored by player 10", player_id=10, team_id=1)
-logger.log_event(event)
-print(logger.get_events())
-```
-
-## Match State Management Module Usage
-
-The `MatchStateManager` class manages the current state of the match (score, time, period, teams, players).
-
-Example usage:
-```python
-from match_event_assistant.match_state import MatchStateManager
-
-manager = MatchStateManager()
-manager.start_match()
-manager.update_score(team_id=1, increment=2)
-manager.stop_match()
-state = manager.get_state()
-print(state)
-```
-
-## API Integration Module Usage
-
-The `APIIntegration` class provides a simple interface for REST API calls.
-
-Example usage:
-```python
-from match_event_assistant.api_integration import APIIntegration
-
-api = APIIntegration(base_url="http://localhost")
-response = api.get("test")
-print(response)
-```
-
-## Analytics Module Usage
-
-The `Analytics` class provides basic analytics for match events and state.
-
-Example usage:
-```python
-from match_event_assistant.analytics import Analytics
-
-analytics = Analytics()
-events = [1, 2, 3]
-result = analytics.summarize_events(events)
-print(result)
-```
-
-## Main Integration & CLI Usage
-
-The `main.py` script wires together all core modules and provides a CLI for basic operations.
-
-Example usage:
-```sh
-python -m match_event_assistant.main --log-event goal "Scored by #10"
-python -m match_event_assistant.main --update-score 1 2
-python -m match_event_assistant.main --fetch-api test
-python -m match_event_assistant.main --analytics
-```
-
-Ensure you have a `.env` file with at least:
-```
-API_BASE_URL=http://localhost/api
-```
+For more information, see PROJECT_OVERVIEW.md, CONTRIBUTING.md, and the issue tracker.
