@@ -126,3 +126,16 @@ manager.stop_match()
 state = manager.get_state()
 print(state)
 ```
+
+## API Integration Module Usage
+
+The `APIIntegration` class provides a simple interface for REST API calls.
+
+Example usage:
+```python
+from match_event_assistant.api_integration import APIIntegration
+
+api = APIIntegration(base_url="http://localhost")
+response = api.get("test")
+print(response)
+```

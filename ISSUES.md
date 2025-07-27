@@ -47,3 +47,8 @@ This file will be updated as issues are clarified, completed, or reprioritized.
 - Scaffolded match_state.py with MatchStateManager and supporting data models.
 - Minimal test (tests/test_match_state.py) added and passing.
 - Usage documented in README.md.
+
+## [2025-07-27 09:30 UTC] API Integration Module
+- Scaffolded api_integration.py with APIIntegration class and APIResponse data model.
+- Minimal test (tests/test_api_integration.py) added and passing.
+- Usage documented in README.md.
