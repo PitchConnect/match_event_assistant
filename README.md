@@ -110,3 +110,19 @@ event = MatchEvent(timestamp=datetime.now(), event_type="goal", description="Sco
 logger.log_event(event)
 print(logger.get_events())
 ```
+
+## Match State Management Module Usage
+
+The `MatchStateManager` class manages the current state of the match (score, time, period, teams, players).
+
+Example usage:
+```python
+from match_event_assistant.match_state import MatchStateManager
+
+manager = MatchStateManager()
+manager.start_match()
+manager.update_score(team_id=1, increment=2)
+manager.stop_match()
+state = manager.get_state()
+print(state)
+```

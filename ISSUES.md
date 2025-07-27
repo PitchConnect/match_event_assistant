@@ -42,3 +42,8 @@ This file will be updated as issues are clarified, completed, or reprioritized.
 - Scaffolded event_logging.py with EventLogger and MatchEvent data model.
 - Minimal test (tests/test_event_logging.py) added and passing.
 - Usage documented in README.md.
+
+## [2025-07-27 09:28 UTC] Match State Management Module
+- Scaffolded match_state.py with MatchStateManager and supporting data models.
+- Minimal test (tests/test_match_state.py) added and passing.
+- Usage documented in README.md.
