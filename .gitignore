@@ -5,3 +5,11 @@ untracked_backup/
 
 .cache/
 untracked_backup/
+
+# Exclude virtualenv, pip, and cache
+.local/
+.pki/
+.config/
+*.pyc
+__pycache__/
+

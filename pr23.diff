@@ -22,7 +22,7 @@ index 91c17b1..2bf7f64 100644
 +++ b/README.md
 @@ -18,3 +18,106 @@ A real-time match event logging and analytics system for referees and analysts.
  ---
- 
+
  For more information, see PROJECT_OVERVIEW.md, CONTRIBUTING.md, and the issue tracker.
 +
 +## Minimal CLI Test Interface
@@ -297,7 +297,7 @@ index 91f7356..7514077 100644
 @@ -8,8 +8,44 @@ class APIClient:
      def __init__(self, *args, **kwargs):
          logger.info(f"APIClient initialized with args={args}, kwargs={kwargs}")
- 
+
 +    def get_match(self, match_id, **kwargs):
 +        import os
 +
@@ -403,7 +403,7 @@ index b884b5c..b80cdda 100644
 --- a/main.py
 +++ b/main.py
 @@ -79,3 +79,6 @@ def main():
- 
+
  if __name__ == "__main__":
      main()
 +
@@ -426,7 +426,7 @@ index 05ffdf3..7d7de43 100644
  import logging
 -
 +from match_event_assistant.event_type_loader import EventTypeLoader
- 
+
  @dataclass
  class MatchEvent:
 -    """Data model for a match event."""
@@ -437,10 +437,10 @@ index 05ffdf3..7d7de43 100644
      description: Optional[str] = None
      player_id: Optional[int] = None
      team_id: Optional[int] = None
- 
+
 +    def validate(self, loader: EventTypeLoader):
 +        loader.validate(self.event_type, self.event_type_id)
- 
+
  class EventLogger:
 -    """
 -    Core event logger for match events.
@@ -453,7 +453,7 @@ index 05ffdf3..7d7de43 100644
 +        self.events = []
          self.logger = logging.getLogger("EventLogger")
 +        self.loader = loader
- 
+
      def log_event(self, event: MatchEvent) -> None:
 -        """Log a new match event."""
 -        self.events.append(event)
@@ -568,9 +568,9 @@ index b31bfba..993fe5e 100644
 +from match_event_assistant.event_type_loader import EventTypeLoader
  from datetime import datetime
 +import pytest
- 
+
 +event_type_loader = EventTypeLoader()
- 
+
 -def test_log_and_get_events():
 -    logger = EventLogger()
 +def test_log_valid_event():

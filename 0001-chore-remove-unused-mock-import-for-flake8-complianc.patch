@@ -44,7 +44,7 @@ index 91c17b1..2bf7f64 100644
 +++ b/README.md
 @@ -18,3 +18,106 @@ A real-time match event logging and analytics system for referees and analysts.
  ---
- 
+
  For more information, see PROJECT_OVERVIEW.md, CONTRIBUTING.md, and the issue tracker.
 +
 +## Minimal CLI Test Interface
@@ -355,7 +355,7 @@ index 91f7356..7514077 100644
 @@ -8,8 +8,44 @@ class APIClient:
      def __init__(self, *args, **kwargs):
          logger.info(f"APIClient initialized with args={args}, kwargs={kwargs}")
- 
+
 +    def get_match(self, match_id, **kwargs):
 +        import os
 +
@@ -597,6 +597,5 @@ index 0000000..24875be
 +    result = run_cli(["get-match", "failid", "--output", "json"], env=env)
 +    assert result.returncode == 2
 +    assert "Simulated API error" in result.stderr or result.stdout
--- 
+--
 2.50.0
-
