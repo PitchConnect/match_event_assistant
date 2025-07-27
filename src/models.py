@@ -1,8 +1,10 @@
 """
 Data models for match events, players, teams, and matches.
 """
+
 from pydantic import BaseModel
 from typing import Optional, List
+
 
 class Player(BaseModel):
     id: str
@@ -10,10 +12,12 @@ class Player(BaseModel):
     number: Optional[int]
     team_id: str
 
+
 class Team(BaseModel):
     id: str
     name: str
     players: Optional[List[Player]] = None
+
 
 class MatchEvent(BaseModel):
     event_type: str  # e.g., 'goal', 'warning', 'substitution'
@@ -22,6 +26,7 @@ class MatchEvent(BaseModel):
     player: Optional[Player] = None
     team: Optional[Team] = None
     description: Optional[str] = None
+
 
 class Match(BaseModel):
     id: str
