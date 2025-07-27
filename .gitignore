@@ -1,1 +1,5 @@
 .env
+.cache/
+untracked_backup/
+*.pyc
+
