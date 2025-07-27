@@ -1,0 +1,8 @@
+{
+  "filename": "main.py",
+  "patch": "@@ -79,3 +79,6 @@ def main():\n \n if __name__ == \"__main__\":\n     main()\n+\n+from match_event_assistant.event_type_loader import EventTypeLoader\n+event_type_loader = EventTypeLoader()"
+}
+{
+  "filename": "match_event_assistant/event_type_loader.py",
+  "patch": "@@ -0,0 +1,15 @@\n+import yaml\n+\n+class EventTypeLoader:\n+    def __init__(self, yaml_path=\"event_types.yaml\"):\n+        with open(yaml_path, \"r\") as f:\n+            data = yaml.safe_load(f)\n+        self.name_to_code = {et[\"name\"]: et[\"code\"] for et in data[\"event_types\"]}\n+        self.code_to_name = {et[\"code\"]: et[\"name\"] for et in data[\"event_types\"]}\n+\n+    def validate(self, event_type, event_type_id):\n+        if event_type not in self.name_to_code:\n+            raise ValueError(f\"Invalid event_type: {event_type}\")\n+        if event_type_id != self.name_to_code[event_type]:\n+            raise ValueError(f\"event_type_id {event_type_id} does not match event_type {event_type}\")\n+        return True"
+}

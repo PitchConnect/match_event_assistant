@@ -1,0 +1,5 @@
+[credential]
+	helper = store
+[user]
+	email = ci-bot@pitchconnect.com
+	name = PitchConnect CI Bot

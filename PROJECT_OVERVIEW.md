@@ -165,3 +165,13 @@ Milestone 2 delivered a robust Event Logging Core Module. The team designed a fl
 - **Mandatory reviewer assignment is not enforced** due to the use of a shared Personal Access Token (PAT) for all agents and the user.
 - Contributors are still expected to follow the documented workflow: PRs, reviews (where possible), pre-commit and CI checks, and issue/milestone management.
 - This enforcement will be reviewed if/when individual credentials are introduced.
+
+
+## 🐳 Deployment Architecture & API Client Container (as of 2025-07-27)
+- The fogis API client is designed to run in a parallel container for modularity and scalability.
+- The canonical image URL is specified in `docker-compose.yaml`:
+
+      image: ghcr.io/pitchconnect/fogis-api-client-python:latest
+
+- For all deployment and environment configuration details, always refer to `docker-compose.yaml` as the single source of truth.
+- If the image or configuration changes, update `docker-compose.yaml` and reference it here as needed.

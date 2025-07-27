@@ -1,6 +1,8 @@
-import logging
-import os
 import sys
+import os
+import logging
+from match_event_assistant.event_type_loader import EventTypeLoader
+
 
 sys.path.insert(0, "/a0/dev")
 
@@ -79,3 +81,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+event_type_loader = EventTypeLoader()
