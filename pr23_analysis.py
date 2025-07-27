@@ -7,7 +7,7 @@ summary = {
     "body": pr.get("body"),
     "files_changed": [f["path"] for f in pr.get("files", [])],
     "author": pr.get("author", {}).get("login"),
-    "labels": [l["name"] for l in pr.get("labels", [])],
+    "labels": [idx["name"] for idx in pr.get("labels", [])],
     "assignees": [a["login"] for a in pr.get("assignees", [])],
     "base_branch": pr.get("baseRefName"),
     "head_branch": pr.get("headRefName"),
