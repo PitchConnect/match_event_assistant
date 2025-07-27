@@ -1,0 +1,52 @@
+generated_at: '2025-07-27T19:13:09'
+event_types:
+- name: regular_goal
+  code: 6
+  description: Regular Goal
+- name: header_goal
+  code: 39
+  description: Header Goal
+- name: corner_goal
+  code: 28
+  description: Corner Goal
+- name: free_kick_goal
+  code: 29
+  description: Free Kick Goal
+- name: own_goal
+  code: 15
+  description: Own Goal
+- name: penalty_goal
+  code: 14
+  description: Penalty Goal
+- name: penalty_missing_goal
+  code: 18
+  description: Penalty Missed
+- name: penalty_save
+  code: 19
+  description: Penalty Saved
+- name: penalty_hitting_frame
+  code: 26
+  description: Penalty Hitting the Frame
+- name: yellow_card
+  code: 20
+  description: Yellow Card
+- name: red_card_deny_goal
+  code: 8
+  description: Red Card (Denying Goal Opportunity)
+- name: red_card_other
+  code: 9
+  description: Red Card (Other Reasons)
+- name: substitution
+  code: 17
+  description: Substitution
+- name: period_start
+  code: 31
+  description: Period Start
+- name: period_end
+  code: 32
+  description: Period End
+- name: match_end
+  code: 23
+  description: Match End (Match Slut)
+notes: Codes and names are based on the definitive EVENT_TYPES mapping from the API
+  client. This list is authoritative for persistence and integration.
