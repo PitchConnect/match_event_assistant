@@ -3,3 +3,5 @@
 untracked_backup/
 *.pyc
 
+.cache/
+untracked_backup/
