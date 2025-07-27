@@ -12,4 +12,3 @@ untracked_backup/
 .config/
 *.pyc
 __pycache__/
-
