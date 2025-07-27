@@ -1,8 +1,6 @@
 import sys
 import os
 import logging
-import os
-import sys
 from match_event_assistant.event_type_loader import EventTypeLoader
 
 
