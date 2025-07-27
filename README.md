@@ -95,3 +95,18 @@ from match_event_assistant.tts_client import TTSClient
 client = TTSClient()
 audio = client.synthesize("Hello, world!", voice="en", output_path="output.wav")
 ```
+
+## Event Logging Module Usage
+
+The `EventLogger` class provides in-memory logging of match events.
+
+Example usage:
+```python
+from match_event_assistant.event_logging import EventLogger, MatchEvent
+from datetime import datetime
+
+logger = EventLogger()
+event = MatchEvent(timestamp=datetime.now(), event_type="goal", description="Scored by player 10", player_id=10, team_id=1)
+logger.log_event(event)
+print(logger.get_events())
+```

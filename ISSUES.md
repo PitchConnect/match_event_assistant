@@ -37,3 +37,8 @@ This file will be updated as issues are clarified, completed, or reprioritized.
 - Initial implementation of TTSClient for Kokoro-FastAPI integration.
 - Minimal test added and passing (see tests/test_tts_client.py).
 - Usage documented in README.md.
+
+## [2025-07-27 09:24 UTC] Event Logging Module
+- Scaffolded event_logging.py with EventLogger and MatchEvent data model.
+- Minimal test (tests/test_event_logging.py) added and passing.
+- Usage documented in README.md.
